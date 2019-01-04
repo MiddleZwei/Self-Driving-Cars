@@ -1,6 +1,7 @@
 # Self-Driving-Cars
 
 <h3> Lane recognition </h3>
+<a href="https://www.instagram.com/p/BmCuaS4hw-y/">Link to the result(video)</a><br><br>
 This is my first experience with programming self-driving cars. There're 2 approaches: robotic and deep learning. The technique in the video belongs to the former.<br><br>
 
 Firstly I was trying to recognize lanes by color in the video and applying region of interest mask then. The problem #1: lanes can change color, therefore hardcoring colors is a really bad idea. Instead, we can use a technique called "Canny Edge Detection", which simply applies a gradient to an image(each frame of the video), then we black out pixels outside the desired range.<br><br>
