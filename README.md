@@ -17,6 +17,8 @@ PI controller: adjusts the current speed to the desired speed.
 I am also taking a Specialization courses on Coursera
 #### Future plans
 In addition to that I am planning on using NIDIA's paper on a CNN architecture which also steers the car, but based on the view from the camera without providing the car with waypoints and the desired speed
+#### Detailed explanation
+More details are evailable in my presentation vie the link: <a href="https://drive.google.com/open?id=1Fb7CKlScm2huQBaP5_efO-Dg1dQln_am">Presentation</a><br><br>
 
 
 ### Lane recognition
