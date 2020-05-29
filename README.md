@@ -1,7 +1,7 @@
 # Self-Driving-Cars
 
 ### Path Tracking
-![CARLA](https://gist.github.com/MiddleZwei/850a3bab978bc0fd169e56e159824fba/raw/8e61fdb2fae61b1a72582219d419ecd245e7c94f/carla_res.jpg)
+![CARLA](https://gist.github.com/eli-halych/850a3bab978bc0fd169e56e159824fba/raw/8e61fdb2fae61b1a72582219d419ecd245e7c94f/carla_res.jpg)
 
 This is part of my thesis I am working on till Feb 2020.
 The main goal is go let the car follow the given path itself by making geometrical calculations on a 2D plane.
