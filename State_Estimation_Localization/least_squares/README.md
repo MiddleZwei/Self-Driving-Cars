@@ -1,6 +1,6 @@
-Python version: Python 3.7.4
+## Method of Least Squares
 
-### General notes !
+#### General notes !
 
 Before blindly applying maximum likelihood estimation or the method of least 
 squares, it is important to quantify errors (uncertainties, a.k.a. outliers of 
