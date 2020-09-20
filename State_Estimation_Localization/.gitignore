@@ -1,9 +1,0 @@
-# IDE files
-.idea/
-__pycache__/
-
-# dependencies
-venv/
-
-# jupyter
-.ipynb_checkpoints
