@@ -6,7 +6,7 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from .rotations import angle_normalize, rpy_jacobian_axis_angle, skew_symmetric, Quaternion
+from rotations import angle_normalize, rpy_jacobian_axis_angle, skew_symmetric, Quaternion
 
 #### 1. Data ###################################################################################
 
