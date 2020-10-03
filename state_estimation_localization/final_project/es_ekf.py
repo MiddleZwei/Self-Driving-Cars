@@ -142,11 +142,13 @@ lidar_i = 0
 ################################################################################################
 # Since we'll need a measurement update for both the GNSS and the LIDAR data, let's make
 # a function for it.
+# PERSONAL NOTES
+# hat - corrected, check - predicted
 ################################################################################################
 def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     print("MEASUREMENT UPDATE")
     # 3.1 Compute Kalman Gain
-    I = np.eye(3)
+    I = np.identity(3)
     R = I * sensor_var
     K = p_cov_check @ h_jac.T @ np.linalg.inv(h_jac @ p_cov_check @ h_jac.T + R)
 
@@ -163,7 +165,7 @@ def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     q_hat = Quaternion(axis_angle=delta_phi).quat_mult(q_check)
 
     # 3.4 Compute corrected covariance
-    p_cov_hat = (np.eye(9) - K @ h_jac) @ p_cov_check
+    p_cov_hat = (np.identity(9) - K @ h_jac) @ p_cov_check
 
     return p_hat, v_hat, q_hat, p_cov_hat
 
@@ -178,8 +180,12 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     delta_t = imu_f.t[k] - imu_f.t[k - 1]
 
     # 1. Update state with IMU inputs
+    C_ns = Quaternion(*q_est[k - 1]).to_mat()  # C_ns is a rotation matrix
 
     # 1.1 Linearize the motion model and compute Jacobians
+    p_est[k] = p_est[k-1] + delta_t * v_est[k-1] + ( (delta_t ** 2) / 2 ) * ( C_ns @ imu_f.data[k-1] + g)
+    v_est[k] = v_est[k-1] + delta_t * (C_ns @ imu_f.data[k-1] + g)
+    q_est[k] = Quaternion(axis_angle=delta_t * imu_w.data[k-1]).quat_mult_right(q_est[k-1])
 
     # 2. Propagate uncertainty
 
