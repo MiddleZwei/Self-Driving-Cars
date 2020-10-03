@@ -144,6 +144,7 @@ lidar_i = 0
 # a function for it.
 ################################################################################################
 def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
+    print("MEASUREMENT UPDATE")
     # 3.1 Compute Kalman Gain
     I = np.eye(3)
     R = I * sensor_var
@@ -164,7 +165,6 @@ def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     # 3.4 Compute corrected covariance
     p_cov_hat = (np.eye(9) - K @ h_jac) @ p_cov_check
 
-    # TODO test and debug
     return p_hat, v_hat, q_hat, p_cov_hat
 
 
