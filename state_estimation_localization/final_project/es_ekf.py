@@ -188,6 +188,10 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     q_est[k] = Quaternion(axis_angle=delta_t * imu_w.data[k-1]).quat_mult_right(q_est[k-1])
 
     # 2. Propagate uncertainty
+    F = None
+    Q = None
+
+    p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac[k-1] @ Q @ l_jac[k-1].T)
 
     # 3. Check availability of GNSS and LIDAR measurements
 
