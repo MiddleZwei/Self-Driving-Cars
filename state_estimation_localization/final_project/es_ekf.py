@@ -188,7 +188,10 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     q_est[k] = Quaternion(axis_angle=delta_t * imu_w.data[k-1]).quat_mult_right(q_est[k-1])
 
     # 2. Propagate uncertainty
-    F = None
+    F = np.identity(9)
+    F[:3, 3:6] = np.identity(3) * delta_t
+    F[3:6, 6:] = -(C_ns @ imu_f.data[k-1]) * delta_t
+
     Q = None
 
     p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac[k-1] @ Q @ l_jac[k-1].T)
