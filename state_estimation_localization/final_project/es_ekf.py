@@ -197,7 +197,7 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     Q[3:, 3:] *= var_imu_w
     Q *= delta_t**2
 
-    p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac[k-1] @ Q @ l_jac[k-1].T)
+    p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac @ Q @ l_jac.T)
 
     # 3. Check availability of GNSS and LIDAR measurements
     if gnss.t.shape[0] > gnss_i and gnss.t[gnss_i] == imu_f.t[k]:
