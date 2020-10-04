@@ -192,7 +192,10 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     F[:3, 3:6] = np.identity(3) * delta_t
     F[3:6, 6:] = -(C_ns @ skew_symmetric(imu_f.data[k - 1].reshape((3, 1)))) * delta_t
 
-    Q = None
+    Q = np.eye(6)
+    Q[0:3, 0:3] *= var_imu_f
+    Q[3:, 3:] *= var_imu_w
+    Q *= delta_t**2
 
     p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac[k-1] @ Q @ l_jac[k-1].T)
 
