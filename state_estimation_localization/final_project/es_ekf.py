@@ -75,18 +75,18 @@ plt.show()
 # THIS IS THE CODE YOU WILL MODIFY FOR PART 2 OF THE ASSIGNMENT.
 ################################################################################################
 # Correct calibration rotation matrix, corresponding to Euler RPY angles (0.05, 0.05, 0.1).
-C_li = np.array([
-    [0.99376, -0.09722, 0.05466],
-    [0.09971, 0.99401, -0.04475],
-    [-0.04998, 0.04992, 0.9975]
-])
+# C_li = np.array([
+#     [0.99376, -0.09722, 0.05466],
+#     [0.09971, 0.99401, -0.04475],
+#     [-0.04998, 0.04992, 0.9975]
+# ])
 
 # Incorrect calibration rotation matrix, corresponding to Euler RPY angles (0.05, 0.05, 0.05).
-# C_li = np.array([
-#      [ 0.9975 , -0.04742,  0.05235],
-#      [ 0.04992,  0.99763, -0.04742],
-#      [-0.04998,  0.04992,  0.9975 ]
-# ])
+C_li = np.array([
+     [ 0.9975 , -0.04742,  0.05235],
+     [ 0.04992,  0.99763, -0.04742],
+     [-0.04998,  0.04992,  0.9975 ]
+])
 
 t_i_li = np.array([0.5, 0.1, 0.5])
 
@@ -100,10 +100,18 @@ lidar.data = (C_li @ lidar.data.T).T + t_i_li
 # most important aspects of a filter is setting the estimated sensor variances correctly.
 # We set the values here.
 ################################################################################################
+# Part 1: normal functioning
+# var_imu_f = 0.10
+# var_imu_w = 0.25
+# var_gnss = 0.01
+# var_lidar = 1.00
+
+# Part 2: bad calibration
 var_imu_f = 0.10
-var_imu_w = 0.25
-var_gnss = 0.01
-var_lidar = 1.00
+var_imu_w = 0.001
+var_gnss  = 0.01
+var_lidar = 1
+
 
 ################################################################################################
 # We can also set up some constants that won't change for any iteration of our solver.
@@ -146,19 +154,18 @@ lidar_i = 0
 # hat - corrected, check - predicted
 ################################################################################################
 def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
-    print("MEASUREMENT UPDATE")
     # 3.1 Compute Kalman Gain
     I = np.identity(3)
     R = I * sensor_var
     K = p_cov_check @ h_jac.T @ np.linalg.inv(h_jac @ p_cov_check @ h_jac.T + R)
 
     # 3.2 Compute error state
-    delta_x_hat = K @ (y_k - p_check)
+    delta_x = K @ (y_k - p_check)
 
     # 3.3 Correct predicted state
-    delta_p = delta_x_hat[0:3]  # [3]
-    delta_v = delta_x_hat[3:6]  # [3]
-    delta_phi = delta_x_hat[6:9]  # [3]
+    delta_p = delta_x[0:3]
+    delta_v = delta_x[3:6]
+    delta_phi = delta_x[6:9]
 
     p_hat = p_check + delta_p
     v_hat = v_check + delta_v
@@ -190,7 +197,7 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     # 2. Propagate uncertainty
     F = np.identity(9)
     F[:3, 3:6] = np.identity(3) * delta_t
-    F[3:6, 6:] = -(C_ns @ skew_symmetric(imu_f.data[k-1].reshape((3,1))))
+    F[3:6, 6:] = -skew_symmetric(C_ns @ (imu_f.data[k-1])) * delta_t
 
     Q = np.identity(6)
     Q[0:3, 0:3] *= var_imu_f
@@ -199,7 +206,7 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
 
     p_cov[k] = (F @ p_cov[k-1] @ F.T) + (l_jac @ Q @ l_jac.T)
 
-    # 3. Check availability of GNSS and LIDAR measurements
+    # # 3. Check availability of GNSS and LIDAR measurements
     if gnss.t.shape[0] > gnss_i and gnss.t[gnss_i] == imu_f.t[k-1]:
         p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_gnss, p_cov[k], gnss.data[gnss_i].T, p_est[k],
                                                                     v_est[k], q_est[k])
@@ -290,22 +297,22 @@ plt.show()
 ################################################################################################
 
 # Pt. 1 submission
-p1_indices = [9000, 9400, 9800, 10200, 10600]
-p1_str = ''
-for val in p1_indices:
-    for i in range(3):
-        p1_str += '%.3f ' % (p_est[val, i])
-with open('pt1_submission.txt', 'w') as file:
-    file.write(p1_str)
+# p1_indices = [9000, 9400, 9800, 10200, 10600]
+# p1_str = ''
+# for val in p1_indices:
+#     for i in range(3):
+#         p1_str += '%.3f ' % (p_est[val, i])
+# with open('pt1_submission.txt', 'w') as file:
+#     file.write(p1_str)
 
 # Pt. 2 submission
-# p2_indices = [9000, 9400, 9800, 10200, 10600]
-# p2_str = ''
-# for val in p2_indices:
-#     for i in range(3):
-#         p2_str += '%.3f ' % (p_est[val, i])
-# with open('pt2_submission.txt', 'w') as file:
-#     file.write(p2_str)
+p2_indices = [9000, 9400, 9800, 10200, 10600]
+p2_str = ''
+for val in p2_indices:
+    for i in range(3):
+        p2_str += '%.3f ' % (p_est[val, i])
+with open('pt2_submission.txt', 'w') as file:
+    file.write(p2_str)
 
 # Pt. 3 submission
 # p3_indices = [6800, 7600, 8400, 9200, 10000]
