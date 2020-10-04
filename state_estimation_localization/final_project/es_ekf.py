@@ -190,7 +190,7 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     # 2. Propagate uncertainty
     F = np.identity(9)
     F[:3, 3:6] = np.identity(3) * delta_t
-    F[3:6, 6:] = -(C_ns @ imu_f.data[k-1]) * delta_t
+    F[3:6, 6:] = -(C_ns @ skew_symmetric(imu_f.data[k - 1].reshape((3, 1)))) * delta_t
 
     Q = None
 
