@@ -162,7 +162,7 @@ def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
 
     p_hat = p_check + delta_p
     v_hat = v_check + delta_v
-    q_hat = Quaternion(axis_angle=delta_phi).quat_mult(q_check)
+    q_hat = Quaternion(axis_angle=delta_phi).quat_mult_left(q_check)  # left mult due to use global orientation error
 
     # 3.4 Compute corrected covariance
     p_cov_hat = (np.identity(9) - K @ h_jac) @ p_cov_check
