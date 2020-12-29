@@ -8,6 +8,7 @@
 # Date: November 21, 2018
 
 import numpy as np
+from scipy.spatial import distance
 import math
 
 # State machine states
@@ -19,16 +20,17 @@ STOP_THRESHOLD = 0.02
 # Number of cycles before moving from stop sign.
 STOP_COUNTS = 10
 
+
 class BehaviouralPlanner:
     def __init__(self, lookahead, stopsign_fences, lead_vehicle_lookahead):
-        self._lookahead                     = lookahead
-        self._stopsign_fences               = stopsign_fences
+        self._lookahead = lookahead
+        self._stopsign_fences = stopsign_fences
         self._follow_lead_vehicle_lookahead = lead_vehicle_lookahead
-        self._state                         = FOLLOW_LANE
-        self._follow_lead_vehicle           = False
-        self._goal_state                    = [0.0, 0.0, 0.0]
-        self._goal_index                    = 0
-        self._stop_count                    = 0
+        self._state = FOLLOW_LANE
+        self._follow_lead_vehicle = False
+        self._goal_state = [0.0, 0.0, 0.0]
+        self._goal_index = 0
+        self._stop_count = 0
 
     def set_lookahead(self, lookahead):
         self._lookahead = lookahead
@@ -97,7 +99,7 @@ class BehaviouralPlanner:
             # First, find the closest index to the ego vehicle.
             # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            # closest_len, closest_index = ...
+            closest_len, closest_index = get_closest_index(waypoints, ego_state)
             # ------------------------------------------------------------------
 
             # Next, find the goal index that lies within the lookahead distance
@@ -235,7 +237,7 @@ class BehaviouralPlanner:
         # consideration.
         arc_length = closest_len
         wp_index = closest_index
-        
+
         # In this case, reaching the closest waypoint is already far enough for
         # the planner.  No need to check additional waypoints.
         if arc_length > self._lookahead:
@@ -246,10 +248,10 @@ class BehaviouralPlanner:
             return wp_index
 
         # Otherwise, find our next waypoint.
-        # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        # while wp_index < len(waypoints) - 1:
-        #   arc_length += ...
+        while wp_index < len(waypoints) - 1:
+            arc_length += distance.euclidean(waypoints[wp_index+1], waypoints[wp_index])
+            wp_index += 1
         # ------------------------------------------------------------------
 
         return wp_index
@@ -292,21 +294,21 @@ class BehaviouralPlanner:
             # Check to see if path segment crosses any of the stop lines.
             intersect_flag = False
             for stopsign_fence in self._stopsign_fences:
-                wp_1   = np.array(waypoints[i][0:2])
-                wp_2   = np.array(waypoints[i+1][0:2])
-                s_1    = np.array(stopsign_fence[0:2])
-                s_2    = np.array(stopsign_fence[2:4])
+                wp_1 = np.array(waypoints[i][0:2])
+                wp_2 = np.array(waypoints[i + 1][0:2])
+                s_1 = np.array(stopsign_fence[0:2])
+                s_2 = np.array(stopsign_fence[2:4])
 
-                v1     = np.subtract(wp_2, wp_1)
-                v2     = np.subtract(s_1, wp_2)
+                v1 = np.subtract(wp_2, wp_1)
+                v2 = np.subtract(s_1, wp_2)
                 sign_1 = np.sign(np.cross(v1, v2))
-                v2     = np.subtract(s_2, wp_2)
+                v2 = np.subtract(s_2, wp_2)
                 sign_2 = np.sign(np.cross(v1, v2))
 
-                v1     = np.subtract(s_2, s_1)
-                v2     = np.subtract(wp_1, s_2)
+                v1 = np.subtract(s_2, s_1)
+                v2 = np.subtract(wp_1, s_2)
                 sign_3 = np.sign(np.cross(v1, v2))
-                v2     = np.subtract(wp_2, s_2)
+                v2 = np.subtract(wp_2, s_2)
                 sign_4 = np.sign(np.cross(v1, v2))
 
                 # Check if the line segments intersect.
@@ -330,7 +332,7 @@ class BehaviouralPlanner:
                     return goal_index, True
 
         return goal_index, False
-                
+
     # Checks to see if we need to modify our velocity profile to accomodate the
     # lead vehicle.
     def check_for_lead_vehicle(self, ego_state, lead_car_position):
@@ -355,27 +357,27 @@ class BehaviouralPlanner:
         if not self._follow_lead_vehicle:
             # Compute the angle between the normalized vector between the lead vehicle
             # and ego vehicle position with the ego vehicle's heading vector.
-            lead_car_delta_vector = [lead_car_position[0] - ego_state[0], 
+            lead_car_delta_vector = [lead_car_position[0] - ego_state[0],
                                      lead_car_position[1] - ego_state[1]]
             lead_car_distance = np.linalg.norm(lead_car_delta_vector)
             # In this case, the car is too far away.   
             if lead_car_distance > self._follow_lead_vehicle_lookahead:
                 return
 
-            lead_car_delta_vector = np.divide(lead_car_delta_vector, 
+            lead_car_delta_vector = np.divide(lead_car_delta_vector,
                                               lead_car_distance)
-            ego_heading_vector = [math.cos(ego_state[2]), 
+            ego_heading_vector = [math.cos(ego_state[2]),
                                   math.sin(ego_state[2])]
             # Check to see if the relative angle between the lead vehicle and the ego
             # vehicle lies within +/- 45 degrees of the ego vehicle's heading.
-            if np.dot(lead_car_delta_vector, 
+            if np.dot(lead_car_delta_vector,
                       ego_heading_vector) < (1 / math.sqrt(2)):
                 return
 
             self._follow_lead_vehicle = True
 
         else:
-            lead_car_delta_vector = [lead_car_position[0] - ego_state[0], 
+            lead_car_delta_vector = [lead_car_position[0] - ego_state[0],
                                      lead_car_position[1] - ego_state[1]]
             lead_car_distance = np.linalg.norm(lead_car_delta_vector)
 
@@ -433,18 +435,19 @@ def get_closest_index(waypoints, ego_state):
     """
     closest_len = float('Inf')
     closest_index = 0
-    # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
+    ego = ego_state[:2]
     # ------------------------------------------------------------------
-    # for i in range(len(waypoints)):
-    #   ...
+    closest_index = distance.cdist(ego, waypoints[:, :1]).argmin()
+    closest_len = distance.euclidean(ego, waypoints[closest_index])
     # ------------------------------------------------------------------
 
     return closest_len, closest_index
 
-# Checks if p2 lies on segment p1-p3, if p1, p2, p3 are collinear.        
+
+# Checks if p2 lies on segment p1-p3, if p1, p2, p3 are collinear.
 def pointOnSegment(p1, p2, p3):
     if (p2[0] <= max(p1[0], p3[0]) and (p2[0] >= min(p1[0], p3[0])) and \
-       (p2[1] <= max(p1[1], p3[1])) and (p2[1] >= min(p1[1], p3[1]))):
+            (p2[1] <= max(p1[1], p3[1])) and (p2[1] >= min(p1[1], p3[1]))):
         return True
     else:
         return False
