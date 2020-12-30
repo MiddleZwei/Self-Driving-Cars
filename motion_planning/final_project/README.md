@@ -17,8 +17,7 @@ Windows 10, Powershell, Python 3.6
 
 #### Execution in PowerShell
 ```shell script
-.\execute.sh  # this copies necessary files into CARLA Simulator
-.\CarlaUE4.exe /Game/Maps/Course4 -windowed -carla-server -benchmark -fps=30
+.\execute.sh  # this copies necessary files into CARLA Simulator and runs both simulator and Python client
 ```
 
 #### Cleanup in PowerShell
