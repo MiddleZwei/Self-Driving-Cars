@@ -240,7 +240,7 @@ class BehaviouralPlanner:
 
         # In this case, reaching the closest waypoint is already far enough for
         # the planner.  No need to check additional waypoints.
-        if arc_length >= self._lookahead:
+        if self.is_arc_length_beyond(arc_length):
             return wp_index
 
         # We are already at the end of the path.
@@ -252,6 +252,9 @@ class BehaviouralPlanner:
         while wp_index < len(waypoints) - 1:
             arc_length += distance.euclidean(waypoints[wp_index+1], waypoints[wp_index])
             wp_index += 1
+
+            if self.is_arc_length_beyond(arc_length):
+                break
         # ------------------------------------------------------------------
 
         return wp_index
@@ -393,6 +396,11 @@ class BehaviouralPlanner:
 
             self._follow_lead_vehicle = False
 
+    def is_arc_length_beyond(self, arc_length):
+        beyond = False
+        if arc_length >= self._lookahead:
+            beyond = True
+        return beyond
 
 ######################################################
 ######################################################
