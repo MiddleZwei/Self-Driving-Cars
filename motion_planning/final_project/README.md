@@ -23,5 +23,5 @@ Windows 10, Powershell, Python 3.6
 
 #### Cleanup in PowerShell
 ```shell script
-.\cleanup.sh  # this undo's execute.sh
+.\cleanup.sh  # this undo's execute.ps1
 ```
