@@ -97,33 +97,30 @@ class BehaviouralPlanner:
         # understand it.
         if self._state == FOLLOW_LANE:
             # First, find the closest index to the ego vehicle.
-            # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
             closest_len, closest_index = get_closest_index(waypoints, ego_state)
             # ------------------------------------------------------------------
 
             # Next, find the goal index that lies within the lookahead distance
             # along the waypoints.
-            # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            # goal_index = ...
+            goal_index = self.get_goal_index(waypoints, ego_state, closest_len, closest_index)
             # ------------------------------------------------------------------
 
             # Finally, check the index set between closest_index and goal_index
             # for stop signs, and compute the goal state accordingly.
-            # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            # goal_index, stop_sign_found = ...
-            # self._goal_index = ...
-            # self._goal_state = ...
+            goal_index, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
+            self._goal_index = goal_index
+            self._goal_state = waypoints[self._goal_index]
             # ------------------------------------------------------------------
 
             # If stop sign found, set the goal to zero speed, then transition to 
             # the deceleration state.
-            # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
             # ------------------------------------------------------------------
-            # if stop_sign_found:
-            #   ...
+            if stop_sign_found:
+                self._goal_state[2] = 0
+                self._state = DECELERATE_TO_STOP
             # ------------------------------------------------------------------
 
             pass
