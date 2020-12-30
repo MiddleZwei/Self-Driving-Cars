@@ -240,7 +240,7 @@ class BehaviouralPlanner:
 
         # In this case, reaching the closest waypoint is already far enough for
         # the planner.  No need to check additional waypoints.
-        if arc_length > self._lookahead:
+        if arc_length >= self._lookahead:
             return wp_index
 
         # We are already at the end of the path.
