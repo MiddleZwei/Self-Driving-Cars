@@ -72,9 +72,8 @@ class PathOptimizer:
         # As a result, their curvature needs to lie within [-0.5, 0.5].
         # The third variable is the arc length, it has no upper limit, and it
         # has a lower limit of the straight line arc length.
-        # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        # bounds = ...
+        bounds = scipy.optimize.Bounds([-0.5, -0.5, sf_0], [0.5, 0.5, np.inf])
         # ------------------------------------------------------------------
 
         # Here we will call scipy.optimize.minimize to optimize our spiral.
@@ -82,13 +81,11 @@ class PathOptimizer:
         # self.objective_grad. The bounds are computed above, and the inital
         # variables for the optimizer are set by p0. You should use the L-BFGS-B
         # optimization methods.
-        # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
         # ------------------------------------------------------------------
-        # res = scipy.optimize.minimize(...)
+        res = scipy.optimize.minimize(fun=self.objective, x0=p0, bounds=bounds, jac=self.objective_grad, method='L-BFGS-B')
         # ------------------------------------------------------------------
 
-        spiral = self.sample_spiral(res.x)
-        return spiral
+        return self.sample_spiral(res.x)
 
     ######################################################
     ######################################################
