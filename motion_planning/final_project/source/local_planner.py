@@ -118,13 +118,13 @@ class LocalPlanner:
         # ------------------------------------------------------------------
         theta = -ego_state[2]
         rotation_matrix = np.array([[cos(theta), -sin(theta)],
-                                    [sin(theta),  cos(theta)]])
-        goal_xy = rotation_matrix @ goal_state_local.T
+                                    [sin(theta), cos(theta)]])
+        goal_xy = rotation_matrix @ goal_state_local[:2].T
         goal_x = goal_xy[0]
         goal_y = goal_xy[1]
         # ------------------------------------------------------------------
 
-        # Compute the goal yaw in the local frame by subtracting off the 
+        # Compute the goal yaw in the local frame by subtracting off the
         # current ego yaw from the heading variable.
         # ------------------------------------------------------------------
         goal_t = heading - ego_state[2]
@@ -154,7 +154,7 @@ class LocalPlanner:
             # and sin(goal_theta + pi/2), respectively.
             # ------------------------------------------------------------------
             x_offset = offset * cos(goal_t + pi/2)
-            y_offset = sin(goal_t + pi/2)
+            y_offset = offset * sin(goal_t + pi/2)
             # ------------------------------------------------------------------
 
             goal_state_set.append([goal_x + x_offset, 
