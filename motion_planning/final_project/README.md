@@ -13,7 +13,7 @@ Windows 10, Powershell, Python 3.6
 
 #### Setup
 1. Create a virtual environment and install dependencies from [requirements.txt](requirements.txt)
-2. Download [CarlaSimulator.zip](https://d3c33hcgiwev3.cloudfront.net/uuTN7y7rEemnrA4AsaAhFA_bbb340f02eeb11e9a59e73356fd63643_CarlaUE4Windows.zip?Expires=1609372800&Signature=SNQDPJfVkmhau9a6Qt92drTnarF3w29lggCBXrCL6h5RWEPMPilVxAyYOnq4S8ipf3e8ydWK28f8S8wlb31ojVfkUo0B5dwnUsGkhzVJPuIxDiWS0JgS-CealgDM6xkxvTTNBF8cxtyfN3XhRkg5BrQoWI34kIvuvgP4FSzBJPM_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A) and place CarlaSimulator folder into the parent folder.
+2. Download `CarlaSimulator.zip` from https://www.coursera.org/learn/motion-planning-self-driving-cars/ and place CarlaSimulator folder into the parent folder.
 
 #### Execution in PowerShell
 ```shell script
