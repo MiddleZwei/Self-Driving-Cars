@@ -493,8 +493,6 @@ def calc_distance(v_i, v_f, a):
     returns:
         d: the final distance (m)
     """
-    pass
-
     # ------------------------------------------------------------------
     d = (v_f ** 2 - v_i ** 2) / (2 ** a)
     return d
@@ -523,8 +521,6 @@ def calc_final_speed(v_i, a, d):
     returns:
         v_f: the final speed (m/s)
     """
-    pass
-
     # ------------------------------------------------------------------
     v_f = np.sqrt(v_i ** 2 + 2 * a * d)
     return v_f
