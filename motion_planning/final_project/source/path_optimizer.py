@@ -111,10 +111,10 @@ class PathOptimizer:
         # Remember that a, b, c, d and s are lists
         params_matrix = np.array([a, b, c, d])
         first = s
-        second = 2 * np.power(s, 2) / 2
-        third = 3 * np.power(s, 3) / 3
-        forth = 4 * np.power(s, 3) / 4
-        order_matrix = np.vstack([first, second, third, forth])
+        second = np.power(s, 2) / 2
+        third = np.power(s, 3) / 3
+        fourth = np.power(s, 4) / 4
+        order_matrix = np.vstack([first, second, third, fourth])
         return params_matrix @ order_matrix
         # ------------------------------------------------------------------
 
@@ -168,8 +168,7 @@ class PathOptimizer:
 
         # Try to vectorize the code using numpy functions for speed if you can.
         # ------------------------------------------------------------------
-        s = p[4]
-        t_points = self.thetaf(a, b, c, d, s)
+        t_points = self.thetaf(a, b, c, d, s_points)
         x_points = scipy.integrate.cumtrapz(np.cos(t_points), s_points)
         y_points = scipy.integrate.cumtrapz(np.sin(t_points), s_points)
         return [x_points, y_points, t_points]

@@ -431,8 +431,8 @@ def get_closest_index(waypoints, ego_state):
     closest_index = 0
     ego = ego_state[:2]
     # ------------------------------------------------------------------
-    closest_index = distance.cdist(ego, waypoints[:, :1]).argmin()
-    closest_len = distance.euclidean(ego, waypoints[closest_index])
+    closest_index = distance.cdist([ego], waypoints[:, :2]).argmin()
+    closest_len = distance.euclidean(ego, waypoints[closest_index][:2])
     # ------------------------------------------------------------------
 
     return closest_len, closest_index
