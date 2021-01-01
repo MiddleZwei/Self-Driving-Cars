@@ -131,6 +131,8 @@ class BehaviouralPlanner:
             # ------------------------------------------------------------------
             if closed_loop_speed <= STOP_THRESHOLD:
                 self._state = STAY_STOPPED
+            else:
+                self._state = DECELERATE_TO_STOP
             # ------------------------------------------------------------------
 
         # In this state, check to see if we have stayed stopped for at
@@ -152,7 +154,7 @@ class BehaviouralPlanner:
                 # index for the stop line is not relevant. Use the goal index
                 # that is the lookahead distance away.
                 # --------------------------------------------------------------
-                goal_index, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
+                _, stop_sign_found = self.check_for_stop_signs(waypoints, closest_index, goal_index)
                 self._goal_index = goal_index
                 self._goal_state = waypoints[self._goal_index]
                 # --------------------------------------------------------------
@@ -161,14 +163,13 @@ class BehaviouralPlanner:
                 # transition back to our lane following state.
                 # --------------------------------------------------------------
                 if not stop_sign_found:
-                    self._stop_count = STOP_COUNTS
                     self._state = FOLLOW_LANE
                 # --------------------------------------------------------------
 
             # Otherwise, continue counting.
             else:
                 # --------------------------------------------------------------
-                self._stop_count -= 1
+                self._stop_count += 1
                 # --------------------------------------------------------------
         else:
             raise ValueError('Invalid state value.')
