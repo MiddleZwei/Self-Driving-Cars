@@ -12,6 +12,10 @@ import scipy.spatial
 from math import sin, cos, pi, sqrt
 
 
+def euclidian_distance(x0, y0, x1, y1):
+    return np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2)
+
+
 class CollisionChecker:
     def __init__(self, circle_offsets, circle_radii, weight):
         self._circle_offsets = np.array(circle_offsets)
@@ -165,9 +169,11 @@ class CollisionChecker:
                 # The centerline goal is given by goal_state.
                 # The exact choice of objective function is up to you.
                 # A lower score implies a more suitable path.
-                # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                 # --------------------------------------------------------------
-                # score = ...
+                score = euclidian_distance(paths[i][0][-1],  # x0
+                                           paths[i][1][-1],  # y0
+                                           goal_state[0],  # x1
+                                           goal_state[1])  # y1
                 # --------------------------------------------------------------
 
                 # Compute the "proximity to other colliding paths" score and
@@ -178,12 +184,12 @@ class CollisionChecker:
                         continue
                     else:
                         if not collision_check_array[j]:
-                            # TODO: INSERT YOUR CODE BETWEEN THE DASHED LINES
                             # --------------------------------------------------
-                            # score += self._weight * ...
+                            score += self._weight * euclidian_distance(paths[j][0][-1],  # x0
+                                                                       paths[j][1][-1],  # y0
+                                                                       paths[i][1][-1],  # x1
+                                                                       paths[i][1][-1])  # y1
                             # --------------------------------------------------
-
-                            pass
 
             # Handle the case of colliding paths.
             else:
