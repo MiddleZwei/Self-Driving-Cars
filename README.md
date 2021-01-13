@@ -6,7 +6,7 @@ The specialization consists of ***4 advanced courses***: [Path Tracking](https:/
 
 The Path Tracking course and its final project became the basis for my **Bachelor thesis** at [PJAIT](https://www.pja.edu.pl/en/) with the topic: Effect of lookahead distance on the ***Pure pursuit controller***'s cross-track error and comparison with ***the Stanley controller***. Graduated in Feb 2020.
 
-
+-> [Certificate](https://www.coursera.org/verify/specialization/JMHJVBRLHZMJ)
 
 ## 1. Path Tracking - final project, thesis basis
 #### todo: VIDEO/GIF DEMO of the final project
@@ -25,11 +25,15 @@ Major key points are available in my presentation: <a href="https://drive.google
 
 ## 2. State Estimation and Localization
 
-#### todo: materials and techniques covered
+todo: materials and techniques covered
 
 ## 3. Perception
 
-#### todo: materials and techniques covered
+I learnt and applied solutions to the main autonomous driving perception tasks based on monocular and stereo cameras to estimate the depth of an image and estimate the trajectory of a vehicle.
+
+Main topics covered are [***Environment perception***](https://github.com/eli-halych/self-driving-cars-specialization/blob/master/visual_perception/environment_perception/Environment%20Perception%20For%20Self-Driving%20Cars.ipynb), [***Stereo depth***](https://github.com/eli-halych/self-driving-cars-specialization/blob/master/visual_perception/stereo_depth/Applying%20Stereo%20Depth%20to%20a%20Driving%20Scenario.ipynb) and [***Visual odometry***](https://github.com/eli-halych/self-driving-cars-specialization/blob/master/visual_perception/visual_odometry/Visual%20Odometry%20for%20Localization%20in%20Autonomous%20Driving.ipynb).
+
+For the description of each topic I worked on and technologies used, please visit [this README](./visual_perception/README.md). There you will also find Jupyter Notebooks that were the basis for implementing the solutions in the tasks.
 
 ## 4. Motion Planning
 
@@ -46,13 +50,27 @@ Python, CARLA simulator, PowerShell with Bash enabled and Windows 10
 After successfully completing the course I was in touch with a guy from Germany and we agreed to collaboration on our own project to grow our skills in motion planning. Most likely it will be implementation of various maneuver test cases in CARLA simulator.
 
 
-## Lane recognition as a preface to my specialization
+## Lane recognition as a the beginning of my interest in AV
 <a href="https://www.instagram.com/p/BmCuaS4hw-y/">Link to the result(video)</a>
 
-This was my first experience with technologies regarding self-driving cars. There're 2 approaches: robotic and deep learning. The technique in the video belongs to the former.
+This was my first experience with technologies regarding self-driving cars. 
 
-Firstly I was trying to recognize lanes by color in the video and applying region of interest mask then. The problem #1: lanes can change color, therefore hardcoring colors is a really bad idea. Instead, we can use a technique called "Canny Edge Detection", which simply applies a gradient to an image(each frame of the video), then we black out pixels outside the desired range.
+There're 2 approaches: geometric and deep learning. The technique in the video belongs to the geometric approach.
 
-Then as soon as we got the dotted image with Canny Edge Detection, we need a model of a line to be found and recognized. The model is y=mx+b in the usual Image Space. Next it should be translated into another coordinate plane called Hough Space. The model will look like b=-mx+y. A dot in Image space is gonna be a line in Hough Space. A line(a sequence of dots) in Image Space will be an intersection of many lines in Hough Space. The problem #2: vertical lines(lanes) have infinite slopes. Solution: another parameters and another formula are needed. We can use xcos(t)+ysin(t)=p. We still need the intersection, but this time curves will make it.
+Firstly I was trying to recognize lanes by color in the video and then applying region of interest mask. 
 
-At this point the lines can be found. Changing parameters' values will adjust the result. Then the region mask of interest is gonna be applied(assuming the camera on the car was fixed). And that's it.
+***The problem #1***: lanes can change color, therefore hardcoding colors is a really bad idea. 
+
+Instead, we can use a technique called "*Canny Edge Detection*", which simply applies a gradient to an image(each frame of the video), then we black out pixels outside the desired range.
+
+Then as soon as we got the dotted image with *Canny Edge Detection*, we need a model of a line to be found and recognized. 
+
+The model is *y=mx+b* in the usual *Image Space*. Next it should be translated into another coordinate plane called *Hough Space*. The model will look like b=-mx+y. 
+
+A dot in Image space is gonna be a line in *Hough Space*. A line(a sequence of dots) in *Image Space* will be an intersection of many lines in *Hough Space*. 
+
+***The problem #2***: vertical lines (lanes) have infinite slopes. 
+
+Solution: another parameters and another formula are needed. We can use *xcos(t)+ysin(t)=p*. We still need the intersection, but this time curves will make it.
+
+At this point the lines can be found. Changing parameters' values will adjust the result. Then the region mask of interest is gonna be applied (assuming the camera on the car was fixed).
